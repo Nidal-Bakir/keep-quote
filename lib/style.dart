@@ -27,7 +27,7 @@ ThemeData darkTheme() {
   backGroundGradientItem2 = Color.fromRGBO(244, 177, 136, 1.0);
 
   return ThemeData.dark().copyWith(
-    primaryColor: primaryColor,
+    primaryColor: primaryColor,canvasColor: primaryColor,
     textTheme: ThemeData.dark().textTheme.copyWith(
           headline6: GoogleFonts.roboto(),
           caption: GoogleFonts.alice(),
