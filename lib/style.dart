@@ -32,6 +32,7 @@ ThemeData darkTheme() {
           headline6: GoogleFonts.roboto(),
           caption: GoogleFonts.alice(),
         ),
+
     accentColor: accentColor,
     scaffoldBackgroundColor: primaryColor,
     floatingActionButtonTheme: FloatingActionButtonThemeData(

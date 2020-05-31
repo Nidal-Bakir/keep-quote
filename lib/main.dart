@@ -7,6 +7,7 @@ import 'style.dart';
 import 'pages/all_page.dart';
 import 'providers/quote_provider.dart';
 import 'pages/favorite_page.dart';
+import 'pages/add_quote_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -103,10 +104,23 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        tooltip: 'add quote',
-        child: Icon(Icons.add),
+      floatingActionButton: OpenContainer(
+        tappable: false,
+        transitionDuration: Duration(milliseconds:400),
+        openColor: Theme.of(context).primaryColor,
+        closedColor: Theme.of(context).primaryColor,
+        openShape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        closedShape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        closedBuilder: (BuildContext context, void Function() action) =>
+            FloatingActionButton(
+          onPressed: action,
+          tooltip: 'add quote',
+          child: Icon(Icons.add),
+        ),
+        openBuilder: (BuildContext context, void Function() action) =>
+            AddQuotePage(),
       ),
     );
   }

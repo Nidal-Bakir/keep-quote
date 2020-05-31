@@ -41,7 +41,7 @@ class QuoteProvider extends ChangeNotifier {
       _favoriteQuotes
           .removeAt(_favoriteQuotes.indexWhere((element) => element.id == id));
     } else if (userTracker == UserTracker.onAll) {
-      _quotes.removeAt(_quotes.firstWhere((element) => element.id == id).id);
+      _quotes.removeAt(_quotes.indexWhere((element) => element.id == id));
     } else {
       print('the user can not do this!!');
       return;
