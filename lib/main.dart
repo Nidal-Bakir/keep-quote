@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
+import 'package:myquotes/models/quote_model.dart';
 import 'package:provider/provider.dart';
 
 import 'style.dart';
@@ -15,8 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      builder: (context, child) => child,
-      create: (BuildContext context) => QuoteProvider(),
+      create: (_) => QuoteProvider(),
       child: MaterialApp(
         title: 'My Quote',
         theme: darkTheme(),
@@ -32,14 +32,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var pages = [
-    AllQuotes(),
+  final pages = [
     FavoriteQuotes(),
+    AllQuotes(),
   ];
   int index = 0, prevIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<QuoteProvider>(context, listen: false);
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -47,6 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               NavigationRail(
                 onDestinationSelected: (value) {
+                  provider.upDateTracker(value);
                   setState(() {
                     index = value;
                   });
@@ -64,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     icon: Icon(Icons.all_inclusive),
                     label: Text('All'),
                   ),
-                NavigationRailDestination(
+                  NavigationRailDestination(
                     icon: Container(
                       child: Icon(Icons.settings),
                     ),
@@ -81,20 +83,21 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               Expanded(
                 child: PageTransitionSwitcher(
-                    reverse: index > prevIndex ? false : true,
-                    duration: Duration(milliseconds: 600),
-                    transitionBuilder: (Widget child,
-                        Animation<double> primaryAnimation,
-                        Animation<double> secondaryAnimation) {
-                      prevIndex = index;
-                      return SharedAxisTransition(
-                        transitionType: SharedAxisTransitionType.vertical,
-                        secondaryAnimation: secondaryAnimation,
-                        animation: primaryAnimation,
-                        child: child,
-                      );
-                    },
-                    child: pages[index]),
+                  reverse: index > prevIndex ? false : true,
+                  duration: Duration(milliseconds: 600),
+                  transitionBuilder: (Widget child,
+                      Animation<double> primaryAnimation,
+                      Animation<double> secondaryAnimation) {
+                    prevIndex = index;
+                    return SharedAxisTransition(
+                      transitionType: SharedAxisTransitionType.vertical,
+                      secondaryAnimation: secondaryAnimation,
+                      animation: primaryAnimation,
+                      child: child,
+                    );
+                  },
+                  child: pages[index],
+                ),
               ),
             ],
           ),

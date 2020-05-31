@@ -22,7 +22,7 @@ class QuoteItem extends StatelessWidget {
       child: OpenContainer(
         openColor: Theme.of(context).primaryColor,
         closedColor: Theme.of(context).primaryColor,
-        transitionDuration: Duration(milliseconds:300),
+        transitionDuration: Duration(milliseconds: 300),
         closedBuilder: (BuildContext context, void Function() action) =>
             Container(
           decoration: BoxDecoration(
@@ -40,6 +40,7 @@ class QuoteItem extends StatelessWidget {
             children: [
               Text(
                 quote.text,
+                textAlign: TextAlign.left,
                 softWrap: true,
                 maxLines: 10,
                 style: Theme.of(context).textTheme.headline6,
@@ -61,6 +62,5 @@ class QuoteItem extends StatelessWidget {
         ),
       ),
     );
-
   }
 }

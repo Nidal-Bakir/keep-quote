@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '.././style.dart' as style;
-class CustomAppBar extends StatelessWidget with PreferredSizeWidget{
-  final String title;
 
-    CustomAppBar({Key key,@required this.title}) : super(key: key);
+class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
+  final String title;
+  final double elevation;
+
+  CustomAppBar({Key key, @required this.title, this.elevation})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      elevation: 0.0,
+      elevation: elevation ?? 0.0,
       title: ShaderMask(
         shaderCallback: (Rect bounds) => LinearGradient(
           colors: [
@@ -25,6 +29,5 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget{
   }
 
   @override
-
-  Size get preferredSize => Size(double.infinity,56);
+  Size get preferredSize => Size(double.infinity, 56);
 }
