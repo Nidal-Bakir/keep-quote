@@ -5,6 +5,10 @@ import '../widgets/quote_item.dart';
 import '../widgets/appbar.dart';
 
 class AllQuotes extends StatelessWidget {
+  final ScrollController sc;
+
+  const AllQuotes(this.sc);
+
   @override
   Widget build(BuildContext context) {
     var quotesList = Provider.of<QuoteProvider>(context).quotes;
@@ -17,7 +21,7 @@ class AllQuotes extends StatelessWidget {
             title: 'My quote',
           ),
           Expanded(
-            child: ListView(
+            child: ListView(controller: sc,
               children: quotesList.map((element) {
                 return QuoteItem(
                   quote: element,

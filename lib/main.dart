@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 import 'style.dart';
@@ -7,6 +8,7 @@ import 'pages/all_page.dart';
 import 'providers/quote_provider.dart';
 import 'pages/favorite_page.dart';
 import 'pages/add_quote_page.dart';
+import 'pages/settings_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -31,12 +33,61 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
+  static ScrollController sc = ScrollController();
+  AnimationController _fABOffSetAnimationController;
+  Animation<Offset> _fABOffsetAnimation;
+  AnimationController _fABAnimationController;
+  var _isFABShown = true;
   final pages = [
-    FavoriteQuotes(),
-    AllQuotes(),
+    FavoriteQuotes(sc),
+    AllQuotes(sc),
+    SettingsPage(),
   ];
   int index = 0, prevIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _fABAnimationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+    );
+    _fABOffSetAnimationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 500),
+    );
+    _fABOffsetAnimation =
+        Tween<Offset>(begin: Offset(0, 0), end: Offset(0, 1.5)).animate(
+            CurvedAnimation(
+                parent: _fABOffSetAnimationController, curve: Curves.ease));
+
+    sc.addListener(scCallback);
+    _fABAnimationController.value = 1;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _fABAnimationController.dispose();
+    _fABOffSetAnimationController.dispose();
+    sc.dispose();
+    sc.removeListener(scCallback);
+  }
+
+  void scCallback() {
+    if (sc.position.userScrollDirection == ScrollDirection.reverse) {
+      if (_isFABShown) {
+        _fABOffSetAnimationController.forward();
+        _isFABShown = false;
+      }
+    } else {
+      if (!_isFABShown) {
+        _fABOffSetAnimationController.reverse();
+        _isFABShown = true;
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +100,13 @@ class _MyHomePageState extends State<MyHomePage> {
               NavigationRail(
                 onDestinationSelected: (value) {
                   provider.upDateTracker(value);
+                  if (value == 2) {
+                    _fABAnimationController.reverse();
+                  } else {
+                    _fABOffSetAnimationController.reverse(); //show the FAB
+                    _isFABShown = true;
+                    _fABAnimationController.forward();
+                  }
                   setState(() {
                     index = value;
                   });
@@ -89,6 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       Animation<double> primaryAnimation,
                       Animation<double> secondaryAnimation) {
                     prevIndex = index;
+
                     return SharedAxisTransition(
                       transitionType: SharedAxisTransitionType.vertical,
                       secondaryAnimation: secondaryAnimation,
@@ -103,23 +162,29 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      floatingActionButton: OpenContainer(
-        tappable: false,
-        transitionDuration: Duration(milliseconds:400),
-        openColor: Theme.of(context).primaryColor,
-        closedColor: Theme.of(context).primaryColor,
-        openShape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        closedShape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        closedBuilder: (BuildContext context, void Function() action) =>
-            FloatingActionButton(
-          onPressed: action,
-          tooltip: 'add quote',
-          child: Icon(Icons.add),
+      floatingActionButton: SlideTransition(
+        position: _fABOffsetAnimation,
+        child: FadeScaleTransition(
+          animation: _fABAnimationController,
+          child: OpenContainer(
+            tappable: false,
+            transitionDuration: Duration(milliseconds: 400),
+            openColor: Theme.of(context).primaryColor,
+            closedColor: Theme.of(context).primaryColor,
+            openShape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+            closedShape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+            closedBuilder: (BuildContext context, void Function() action) =>
+                FloatingActionButton(
+              onPressed: action,
+              tooltip: 'add quote',
+              child: Icon(Icons.add),
+            ),
+            openBuilder: (BuildContext context, void Function() action) =>
+                AddQuotePage(),
+          ),
         ),
-        openBuilder: (BuildContext context, void Function() action) =>
-            AddQuotePage(),
       ),
     );
   }
