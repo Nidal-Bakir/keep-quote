@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:animations/animations.dart';
 import 'package:provider/provider.dart';
 import '../models/quote_model.dart';
 import '../providers/quote_provider.dart';

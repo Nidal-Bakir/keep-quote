@@ -1,34 +1,31 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 import '../models/quote_model.dart';
+import '../database/database.dart';
 
 enum UserTracker { onFavorite, onAll, onSettings }
 
 class QuoteProvider extends ChangeNotifier {
+  QuoteProvider() {
+    getAllQuoteFromDB();
+  }
+
   var userTracker = UserTracker.onFavorite;
-  final List<Quote> _quotes = [
-    Quote(0, 'the man is man ', 'what ever'),
-    Quote(1, '1the man is man ', 'what ever'),
-    Quote(
-        2,
-        ' 2the man is man  so that will be the sixe bro from re the maicrica yes for sho the man is man  so that will be the sixe bro from re the maicrica yes for sho the man is man  so that will be the sixe bro from re the maicrica yes for sho the man is man  so that will be the sixe bro from re the maicrica yes for sho ',
-        'what ever'),
-    Quote(3, '3the man is man ', 'what ever'),
-    Quote(4, '4the man is man ', 'what ever'),
-    Quote(5, 'the man is man ', 'what ever'),
-    Quote(6, 'the man is man ', 'what ever'),
-    Quote(7, 'the man is man ', 'what ever'),
-    Quote(8, 'the man is man ', 'what ever'),
-  ];
-  final List<Quote> _favoriteQuotes = [
-    Quote(1, '1the man is man ', 'what ever'),
-    Quote(2, '2the man is man ', 'what ever'),
-    Quote(3, '3the man is man ', 'what ever'),
-    Quote(4, '4the man is man ', 'what ever'),
-  ];
+  var db = DataBase();
+  final List<Quote> _quotes = [];
+  final List<Quote> _favoriteQuotes = [];
+
+  void getAllQuoteFromDB() async {
+    _quotes.clear();
+    _favoriteQuotes.clear();
+    var allQuoteFromDB = await db.getAllQuote();
+    _quotes.addAll(allQuoteFromDB.reversed);
+    _favoriteQuotes.addAll(_quotes.where((element) => element.isFavorite));
+  }
 
   void addQuote(Quote quote) {
     _quotes.insert(0, quote);
+    db.addQuote(quote);
     notifyListeners();
   }
 
@@ -36,29 +33,34 @@ class QuoteProvider extends ChangeNotifier {
 
   List<Quote> get favoriteQuotes => List.unmodifiable(_favoriteQuotes);
 
+  void removeFromFavoriteList(int id) {
+    int index = _favoriteQuotes.indexWhere((element) => element.id == id);
+    if (index == -1) return;
+    _favoriteQuotes.removeAt(index);
+  }
+
   void deleteQuote(int id) {
-    if (userTracker == UserTracker.onFavorite) {
-      _favoriteQuotes
-          .removeAt(_favoriteQuotes.indexWhere((element) => element.id == id));
-    } else if (userTracker == UserTracker.onAll) {
+    if (userTracker == UserTracker.onAll) {
       _quotes.removeAt(_quotes.indexWhere((element) => element.id == id));
-    } else {
-      print('the user can not do this!!');
-      return;
+      db.removeQuote(id);
     }
+    removeFromFavoriteList(id);
     notifyListeners();
   }
 
   void addFavoriteQuote(Quote quote) {
     _favoriteQuotes.insert(0, quote);
+    db.addToFavoriteList(quote);
+    notifyListeners();
+  }
 
-    notifyListeners();
-  }
   void removeFromFavoriteQuote(int id) {
-    _favoriteQuotes
-        .removeAt(_favoriteQuotes.indexWhere((element) => element.id == id));
+    int index = _favoriteQuotes.indexWhere((element) => element.id == id);
+    db.removeFromFavoriteList(_favoriteQuotes[index]);
+    _favoriteQuotes.removeAt(index);
     notifyListeners();
   }
+
   bool isFavorite(Quote quote) {
     return _favoriteQuotes.contains(quote);
   }

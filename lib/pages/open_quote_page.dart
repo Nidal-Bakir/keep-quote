@@ -65,6 +65,7 @@ class _OpenQuoteState extends State<OpenQuote> {
                   textColor: Colors.grey,
                   onPressed: () {
                     provider.deleteQuote(widget.quote.id);
+                    Navigator.of(context).pop();
                   },
                   icon: Icon(Icons.delete),
                   label: Text(

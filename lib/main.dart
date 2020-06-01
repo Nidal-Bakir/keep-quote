@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
-import 'package:myquotes/models/quote_model.dart';
 import 'package:provider/provider.dart';
 
 import 'style.dart';
