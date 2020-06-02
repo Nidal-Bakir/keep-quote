@@ -4,12 +4,14 @@ import '../models/quote_model.dart';
 import '../database/database.dart';
 
 enum UserTracker { onFavorite, onAll, onSettings }
+enum UserTheme { dark, light }
 
 class QuoteProvider extends ChangeNotifier {
   QuoteProvider() {
     getAllQuoteFromDB();
   }
 
+  var userTheme = UserTheme.dark;
   var userTracker = UserTracker.onFavorite;
   var db = DataBase();
   final List<Quote> _quotes = [];
@@ -67,5 +69,10 @@ class QuoteProvider extends ChangeNotifier {
 
   void upDateTracker(int index) {
     userTracker = UserTracker.values[index];
+  }
+
+  void changeTheme(UserTheme userTheme) {
+    this.userTheme = userTheme;
+    notifyListeners();
   }
 }

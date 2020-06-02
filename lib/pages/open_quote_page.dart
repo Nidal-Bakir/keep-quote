@@ -47,19 +47,19 @@ class _OpenQuoteState extends State<OpenQuote> {
                   },
                   icon: Icon(
                     Icons.favorite,
-                    color: isFav ? Colors.red[900] : Colors.grey[100],
+                    color: isFav ? Colors.red[900] : style.actionButtonColor,
                   ),
                   label: Text(
                     'Love',
                     style: TextStyle(
-                      color: isFav ? Colors.red[900] : Colors.grey[100],
+                      color: isFav ? Colors.red[900] :style.actionButtonColor,
                     ),
                   ),
                 ),
                 Text(
                   'Author : ${widget.quote.author}',
                   style: TextStyle(
-                      color: Colors.grey[100], fontWeight: FontWeight.bold),
+                      color: style.actionButtonColor, fontWeight: FontWeight.bold),
                 ),
                 FlatButton.icon(
                   textColor: Colors.grey,

@@ -19,10 +19,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => QuoteProvider(),
-      child: MaterialApp(
-        title: 'My Quote',
-        theme: darkTheme(),
-        home: MyHomePage(),
+      child: Consumer<QuoteProvider>(
+        builder: (_, QuoteProvider provider, __) {
+          return MaterialApp(
+            title: 'My Quote',
+            theme: provider.userTheme == UserTheme.dark
+                ? darkTheme()
+                : lightTheme(),
+            home: MyHomePage(),
+          );
+        },
       ),
     );
   }
@@ -137,7 +143,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 width: 2.5,
                 indent: 56,
                 thickness: 4,
-                color: Color.fromRGBO(56, 56, 78, 1.0),
               ),
               Expanded(
                 child: PageTransitionSwitcher(

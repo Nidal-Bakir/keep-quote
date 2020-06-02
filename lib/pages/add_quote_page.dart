@@ -76,7 +76,7 @@ class _AddQuotePageState extends State<AddQuotePage> {
                     },
                     style: Theme.of(context)
                         .textTheme
-                        .headline6
+                        .headline5
                         .copyWith(letterSpacing: 1),
                     decoration: InputDecoration(
                         isDense: true,
@@ -95,7 +95,7 @@ class _AddQuotePageState extends State<AddQuotePage> {
                     },
                     maxLines: 6,
                     minLines: 1,
-                    style: Theme.of(context).textTheme.headline6,
+                    style: Theme.of(context).textTheme.headline5,
                     decoration: InputDecoration(
                         border: OutlineInputBorder(), labelText: 'The quote'),
                   ),
@@ -106,7 +106,7 @@ class _AddQuotePageState extends State<AddQuotePage> {
                     },
                     child: Text(
                       'SAVE',
-                      style: Theme.of(context).textTheme.headline6,
+                      style: Theme.of(context).textTheme.headline5,
                     ),
                   ),
                 ],
