@@ -1,7 +1,9 @@
+
 import 'package:flutter/material.dart';
 
 import '../models/quote_model.dart';
 import '../database/database.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum UserTracker { onFavorite, onAll, onSettings }
 enum UserTheme { dark, light }
@@ -9,6 +11,13 @@ enum UserTheme { dark, light }
 class QuoteProvider extends ChangeNotifier {
   QuoteProvider() {
     getAllQuoteFromDB();
+    getThemeDataFromPref();
+  }
+
+  void getThemeDataFromPref() async {
+    var pref = await SharedPreferences.getInstance();
+    var userTheme = pref.getInt('theme') ?? 0;
+    changeTheme(UserTheme.values[userTheme]);
   }
 
   var userTheme = UserTheme.dark;
@@ -71,8 +80,10 @@ class QuoteProvider extends ChangeNotifier {
     userTracker = UserTracker.values[index];
   }
 
-  void changeTheme(UserTheme userTheme) {
+  void changeTheme(UserTheme userTheme) async {
     this.userTheme = userTheme;
     notifyListeners();
+    var pref = await SharedPreferences.getInstance();
+    pref.setInt('theme', userTheme.index);
   }
 }

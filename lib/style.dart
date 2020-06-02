@@ -48,6 +48,7 @@ ThemeData lightTheme() {
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       backgroundColor: surfaceColor,
       splashColor: primaryColor,
+      foregroundColor: primaryColor,
     ),
   );
 }

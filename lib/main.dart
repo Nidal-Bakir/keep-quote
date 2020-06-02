@@ -9,6 +9,7 @@ import 'providers/quote_provider.dart';
 import 'pages/favorite_page.dart';
 import 'pages/add_quote_page.dart';
 import 'pages/settings_page.dart';
+import 'pages/hold_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
             theme: provider.userTheme == UserTheme.dark
                 ? darkTheme()
                 : lightTheme(),
-            home: MyHomePage(),
+            home: HoldPage(),
           );
         },
       ),
